@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Windows;
 
 using Bank_System.Windows;
@@ -128,17 +129,40 @@ namespace Bank_System
             LV_Clients.ItemsSource = (TV_Departments.SelectedItem as Department<Client>).Where(x => x != null);
         }
 
-        private void GetTransferNotification(Client from, Client to)
+        /// <summary>
+        /// Method to be NOTIFIED when Transfer is successful
+        /// </summary>
+        /// <param name="from">Client transfer FROM</param>
+        /// <param name="to">Client Transfer TO</param>
+        /// <param name="amount">Transfer Amount</param>
+        private void GetTransferNotification(Client from, Client to, float amount)
         {
-            MessageBox.Show($"Transfer betwwen {from.Name} to {to.Name} was successful!\n" +
+            MessageBox.Show($"Transfer between {from.Name} to {to.Name} was successful!\n" +
+                            $"Transfer amount : {amount}\n" +
                             $"{from.Name} new balance is : {from.Balance}\n" +
                             $"{to.Name} new balance is : {to.Balance}\n",
                             $"{MainWindow.TitleProperty.Name}",
                             MessageBoxButton.OK,
                             MessageBoxImage.Information);
 
-            tempDept.TransferNotification -= GetTransferNotification;
+            SaveLog(from, to, amount);
 
+            tempDept.TransferNotification -= GetTransferNotification;
+        }
+
+        /// <summary>
+        /// Method to SAVE log
+        /// </summary>
+        /// <param name="from">Client FROM Transfer</param>
+        /// <param name="to">Client TO Transfer</param>
+        /// <param name="amount">Transfer Amount</param>
+        private void SaveLog(Client from, Client to, float amount)
+        {
+            string[] textToAdd = {$"{from.Status} {from.Name} {from.LastName} made Transfer to " +
+                                  $"{to.Status} {to.Name} {to.LastName}." +
+                                  $"Transfer amount : {amount}" };
+
+            File.AppendAllLines("log.txt", textToAdd);
         }
 
         #endregion Additional Methods

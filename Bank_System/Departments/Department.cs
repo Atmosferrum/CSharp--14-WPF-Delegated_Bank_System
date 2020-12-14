@@ -14,7 +14,7 @@ namespace Bank_System
         protected T[] items; //Array of Items in this.Collection.Generic
         protected int size; //Size of this.Colletion.Generic
 
-        public event Action<Client, Client> TransferNotification;
+        public event Action<Client, Client, float> TransferNotification;
 
         #region Constructor;
 
@@ -185,7 +185,7 @@ namespace Bank_System
             fromClient.Balance -= amount;
             toClient.Balance += amount;
 
-            TransferNotification?.Invoke(fromClient, toClient);
+            TransferNotification?.Invoke(fromClient, toClient, amount);
         }
 
         /// <summary>
