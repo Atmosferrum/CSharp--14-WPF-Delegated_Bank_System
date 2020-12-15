@@ -25,7 +25,9 @@ namespace Bank_System.Windows
                                    && Amount > 0
                                    && Amount <= From;
 
-        private bool inputDataIsCorrect => CB_ToClient.SelectedIndex > -1  //Bool to CHECK if input Data is correct
+        private bool selectedClient => CB_ToClient.SelectedIndex > -1; //Bool to CHECK if there's selected Client
+
+        private bool inputDataIsCorrect => selectedClient  //Bool to CHECK if input Data is correct
                                         && amountIsValid;
                                         //&& TB_AmountToTransfer.Text != null
                                         //&& TB_AmountToTransfer.Text != "";
@@ -86,7 +88,12 @@ namespace Bank_System.Windows
             }
             else
             {
-                MessageBox.Show($"The DATA you are entering is wrong!",
+                string message = !parsedAmount ? "Please input only NUMBERS!" 
+                               : !amountIsValid ? "Please input MORE than 0 and LESS then deposit of Client you're trying to transfer from!" 
+                               : !selectedClient ? "Please selec Client to recive transfer!"
+                               : "The DATA you are entering is wrong!";
+
+                MessageBox.Show(message,
                 $"{TransferWindow.TitleProperty.Name}",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -136,12 +143,15 @@ namespace Bank_System.Windows
             }
             else
             {
-                MessageBox.Show($"The DATA you are entering is wrong!",
+                string message = !parsedAmount ? "Please input only NUMBERS!"
+                               : !amountIsValid ? "Please input MORE than 0 and LESS then deposit of Client you're trying to transfer from!"
+                               : !selectedClient ? "Please selec Client to recive transfer!"
+                               : "The DATA you are entering is wrong!";
+
+                MessageBox.Show(message,
                 $"{TransferWindow.TitleProperty.Name}",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
-
-                TB_AmountResult.Text = "";
             }            
         }
 
